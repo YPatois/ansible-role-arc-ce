@@ -49,22 +49,31 @@
   with_items: "{{ arc_frontend_services | default({}) }}"
   when: arc_frontend_services.0 != ""
 
-- name: Template grid-mapfile
-  template:
-    backup: yes
-    src: grid-mapfile.j2
-    dest: /etc/grid-security/grid-mapfile
-    owner: root
-    mode: 0644
-
 - name: Validate a-rex service
   shell: /etc/init.d/a-rex validate
 
-- name: Test job submission
-  block:
+- block:
     - name: Set variables
       set_fact:
         jobid_file: "/tmp/jobids.info"
+
+    - name: Install ARC and voms clients
+      package:
+        name: "{{ item }}"
+      with_items:
+        - nordugrid-arc-client
+        - voms-clients
+        - voms-clients-cpp
+    
+    - name: Get DN from user proxy certificate
+      shell: /usr/bin/voms-proxy-info -file "{{ proxy_file }}" -identity
+      register: proxy_dn
+    
+    - name: Map DN to current account in grid-mapfile
+      lineinfile:
+        path: /etc/grid-security/grid-mapfile
+        line: '"{{ proxy_dn }}" {{ ansible_env.SUDO_USER }}'
+
 
     - name: Get proxy info
       shell: /usr/bin/arcproxy -I -P "{{ proxy_file }}"
@@ -82,6 +91,8 @@
       until: job_status.stdout.find("Finished") != -1
       retries: 20
       delay: 30
+  environment:
+    X509_USER_PROXY: "{{ proxy_file }}"
   when: enable_testing 
   tags:
     - testing
