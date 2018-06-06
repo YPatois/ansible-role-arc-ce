@@ -1,0 +1,87 @@
+---
+- name: arc_frontend_griddir must be defined
+  assert:
+    that: "arc_frontend_griddir is defined"
+
+- name: arc_frontend_sessiondir must be defined
+  assert:
+    that: "arc_frontend_sessiondir is defined"
+
+- name: install Nordugrid ARC packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ arc_frontend_packages | default({}) }}"
+
+- name: Create Grid dir 
+  file:
+    path: "{{ arc_frontend_griddir }}"
+    state: directory
+    owner: root
+    mode: 0755
+
+- name: Create Session dir 
+  file:
+    path: "{{ arc_frontend_sessiondir }}"
+    state: directory
+    owner: nobody
+    group: nobody
+    mode: 0755
+
+- name: Create Control dir 
+  file:
+    path: "{{ arc_frontend_controldir }}"
+    state: directory
+
+- name: Template arc.conf file
+  template:
+    backup: yes
+    src: arc.conf.j2
+    dest: /etc/arc.conf
+    owner: root
+    mode: 0644
+
+- name: start and enable arc frontend services
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items: "{{ arc_frontend_services | default({}) }}"
+  when: arc_frontend_services.0 != ""
+
+- name: Template grid-mapfile
+  template:
+    backup: yes
+    src: grid-mapfile.j2
+    dest: /etc/grid-security/grid-mapfile
+    owner: root
+    mode: 0644
+
+- name: Validate a-rex service
+  shell: /etc/init.d/a-rex validate
+
+- name: Test job submission
+  block:
+    - name: Set variables
+      set_fact:
+        jobid_file: "/tmp/jobids.info"
+
+    - name: Get proxy info
+      shell: /usr/bin/arcproxy -I -P "{{ proxy_file }}"
+      register: proxy_info
+ 
+    - debug:
+        msg: "{{ proxy_info.stdout }}"
+
+    - name: Submit job
+      shell: /usr/bin/arctest -c "{{ ansible_fqdn }}" -J 1 -o "{{ jobid_file }}"
+  
+    - name: Wait for job to end (30s delay, 20 retries)
+      shell: /usr/bin/arcstat -i "{{ jobid_file }}"
+      register: job_status
+      until: job_status.stdout.find("Finished") != -1
+      retries: 20
+      delay: 30
+  when: enable_testing 
+  tags:
+    - testing

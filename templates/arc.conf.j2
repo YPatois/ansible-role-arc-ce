@@ -1,0 +1,76 @@
+# This file is managed by ansible
+
+{% if arc_frontend_settings is defined %}
+{{ arc_frontend_settings }}
+{% else %}
+# FGCI arc.conf 
+
+
+##made on basis of arc.conf in purlerain.uio.no
+[common]
+hostname="{{ ansible_fqdn }}"
+lrms="fork"
+x509_user_key="{{ arc_x509_user_key }}"
+x509_user_cert="{{ arc_x509_user_cert }}"
+x509_cert_dir="{{ arc_x509_cert_dir }}"
+gridmap="{{ arc_gridmap }}"
+
+
+[grid-manager]
+user="root"
+controldir="{{ arc_frontend_controldir }}"
+sessiondir="{{ arc_frontend_sessiondir }}"
+
+logfile="/var/log/arc/grid-manager.log"
+pidfile="/tmp/grid-manager.pid"
+mail="grid-support@usit.uio.no"
+joblog="/var/log/arc/gm-jobs.log"
+arex_mount_point="https://{{ ansible_fqdn }}:443/arex"
+enable_emies_interface="yes"
+enable_arc_interface="yes"
+
+[gridftpd]
+user="root"
+debug="5"
+logfile="/var/log/arc/gridftpd.log"
+pidfile="/tmp/gridftpd.pid"
+port="2811"
+allowunknown="no"
+
+
+[gridftpd/jobs]
+path="/jobs"
+plugin="jobplugin.so"
+allownew="yes"
+
+
+[queue/fork]
+name="fork"
+homogeneity="True"
+scheduling_policy="FIFO"
+comment="This queue is nothing more than a fork host"
+nodecpu="adotf"
+architecture="adotf"
+
+
+[infosys]
+user="root"
+overwrite_config="yes"
+port="2135"
+debug="5"
+slapd_loglevel="0"
+registrationlog="/var/log/arc/inforegistration.log"
+providerlog="/var/log/arc/infoprovider.log"
+provider_loglevel="2"
+
+
+[cluster]
+#adotf=infoprovider scripts should get architecture automatically at the frontend
+cluster_alias="UMD verification cluster"
+comment="This is a minimal out-of-box CE setup for testing"
+nodeaccess="outbound"
+architecture="adotf"
+opsys="CentOS"
+nodecpu="{{ arc_frontend_cluster_nodecpu }}"
+
+{% endif %}

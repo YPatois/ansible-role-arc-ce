@@ -1,0 +1,25 @@
+---
+arc_frontend_griddir: "/var/spool/nordugrid"
+arc_frontend_controldir: "{{ arc_frontend_griddir }}/jobstatus"
+arc_frontend_sessiondir: "{{ arc_frontend_griddir }}/grid"
+arc_frontend_packages:
+ - nordugrid-arc-arex
+ - nordugrid-arc-gridftpd
+ - nordugrid-arc-gridmap-utils
+ - nordugrid-arc-ldap-infosys
+ - nordugrid-arc-aris
+ - nordugrid-arc-arex
+ - nordugrid-arc-hed
+ - nordugrid-arc-python
+ - nordugrid-arc-plugins-globus
+ - time # needed for the validate operation
+arc_frontend_services:
+ - a-rex
+ - gridftpd
+ - nordugrid-arc-slapd
+ - nordugrid-arc-bdii
+ - nordugrid-arc-inforeg
+arc_x509_cert_dir: "/etc/grid-security/certificates"
+arc_gridmap: "/etc/grid-security/grid-mapfile"
+arc_frontend_cluster_nodecpu: "adotf"
+enable_testing: false

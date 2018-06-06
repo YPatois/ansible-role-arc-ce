@@ -1,0 +1,6 @@
+---
+- hosts: all
+  environment:
+    X509_USER_PROXY: "{{ proxy_file }}"
+  roles:
+  - ansible-arc
