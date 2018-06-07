@@ -71,7 +71,7 @@
     
     - name: Map DN to current account in grid-mapfile
       lineinfile:
-        path: /etc/grid-security/grid-mapfile
+        dest: /etc/grid-security/grid-mapfile
         line: '"{{ proxy_dn }}" {{ ansible_env.SUDO_USER }}'
 
 
