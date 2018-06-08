@@ -72,8 +72,7 @@
     - name: Map DN to current account in grid-mapfile
       lineinfile:
         dest: /etc/grid-security/grid-mapfile
-        line: '"{{ proxy_dn }}" {{ ansible_env.SUDO_USER }}'
-
+        line: '"{{ proxy_dn.stdout }}" {{ ansible_env.SUDO_USER }}'
 
     - name: Get proxy info
       shell: /usr/bin/arcproxy -I -P "{{ proxy_file }}"
