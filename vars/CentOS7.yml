@@ -1,0 +1,3 @@
+voms_pkgs:
+  - voms-clients
+  - voms-clients-cpp
