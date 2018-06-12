@@ -59,13 +59,14 @@
 
     - name: Get VOMS client packages based on OS
       include_vars:
-        file: "{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yml"
-        name: voms_pkgs
+        dir: vars
+        files_matching: "{{ ansible_distribution }}{{ ansible_distribution_major_version}}.yml"
+        name: os_vars
 
     - name: Install ARC and voms clients
       package:
         name: "{{ item }}"
-      with_items: "{{ voms_pkgs }} + [ 'nordugrid-arc-client' ]"
+      with_items: "{{ os_vars.voms_pkgs }} + [ 'nordugrid-arc-client' ]"
     
     - name: Get DN from user proxy certificate
       shell: /usr/bin/voms-proxy-info -file "{{ proxy_file }}" -identity
