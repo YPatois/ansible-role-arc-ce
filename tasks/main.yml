@@ -1,4 +1,10 @@
 ---
+- name: Get VOMS client packages based on OS
+  include_vars:
+    dir: vars
+    files_matching: "{{ ansible_distribution }}{{ ansible_distribution_major_version}}.yml"
+    name: os_vars
+
 - name: arc_frontend_griddir must be defined
   assert:
     that: "arc_frontend_griddir is defined"
@@ -56,12 +62,6 @@
     - name: Set variables
       set_fact:
         jobid_file: "/tmp/jobids.info"
-
-    - name: Get VOMS client packages based on OS
-      include_vars:
-        dir: vars
-        files_matching: "{{ ansible_distribution }}{{ ansible_distribution_major_version}}.yml"
-        name: os_vars
 
     - name: Install ARC and voms clients
       package:
