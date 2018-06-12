@@ -23,3 +23,5 @@ arc_x509_cert_dir: "/etc/grid-security/certificates"
 arc_gridmap: "/etc/grid-security/grid-mapfile"
 arc_frontend_cluster_nodecpu: "adotf"
 enable_testing: false
+testing_no_delay: 30
+testing_no_retries: 20

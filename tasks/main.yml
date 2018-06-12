@@ -90,12 +90,12 @@
     - name: Submit job
       shell: /usr/bin/arctest -c "{{ ansible_fqdn }}" -J 1 -o "{{ jobid_file }}"
   
-    - name: Wait for job to end (30s delay, 20 retries)
+    - name: Wait for job to end ({{ testing_no_delay }}s delay, {{testing_no_retries}}s retries)
       shell: /usr/bin/arcstat -i "{{ jobid_file }}"
       register: job_status
       until: job_status.stdout.find("Finished") != -1
-      retries: 20
-      delay: 30
+      retries: "{{ testing_no_retries }}"
+      delay: "{{ testing_no_delay }}"
   environment:
     X509_USER_PROXY: "{{ proxy_file }}"
   when: enable_testing 
