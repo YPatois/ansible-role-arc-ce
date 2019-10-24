@@ -1,0 +1,39 @@
+#
+# ARC Computing Element zero configuration
+# Consult ARC Installation Guide to modify this configuration for production use-cases
+#
+
+[common]
+hostname={{ ansible_fqdn }}
+x509_host_key = {{ arc_x509_user_key }}
+x509_host_cert = {{ arc_x509_user_cert }}
+x509_cert_dir={{ arc_x509_cert_dir }}
+
+[authgroup:zero]
+file = /etc/grid-security/testCA.allowed-subjects
+
+[mapping]
+map_to_user = zero nobody:nobody
+
+[lrms]
+lrms = fork
+
+[arex]
+
+[arex/ws]
+
+[arex/ws/jobs]
+allowaccess = zero
+
+[gridftpd]
+
+[infosys]
+
+[infosys/ldap]
+
+[infosys/glue2]
+
+[infosys/cluster]
+
+[queue:fork]
+

@@ -45,7 +45,7 @@
 - name: Template arc.conf file
   template:
     backup: yes
-    src: arc.conf.j2
+    src: "arc{{ arc_version }}.conf.j2"
     dest: /etc/arc.conf
     owner: root
     mode: 0644
@@ -55,8 +55,7 @@
     name: "{{ item }}"
     state: started
     enabled: yes
-  with_items: "{{ arc_frontend_services | default({}) }}"
-  when: arc_frontend_services.0 != ""
+  with_items: "{{ arc_frontend_services[arc_version] | default({}) }}"
 
 - name: Validate a-rex service
   shell: /etc/init.d/a-rex validate
