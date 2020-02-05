@@ -1,8 +1,8 @@
 ---
 arc_version: 6
-arc_frontend_griddir: "/var/spool/nordugrid"
+arc_frontend_griddir: "/var/spool/arc"
 arc_frontend_controldir: "{{ arc_frontend_griddir }}/jobstatus"
-arc_frontend_sessiondir: "{{ arc_frontend_griddir }}/grid"
+arc_frontend_sessiondir: "{{ arc_frontend_griddir }}/sessiondir"
 arc_frontend_packages:
  - nordugrid-arc-arex
  - nordugrid-arc-gridftpd
