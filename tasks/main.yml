@@ -90,6 +90,12 @@
    
     #- name: Set proxy file owner as root 
     #
+    #
+    - name: Set proxypath in arc.client (arcinfo not working with X509_USER_PROXY)
+      replace:
+        path: "{{ ansible_env.HOME }}/.arc/client.conf"
+        regexp: "^#proxypath.+"
+        replace: "proxypath={{ proxy_file }}"
 
     - name: Check arex endpoint
       shell: arcinfo -c https://127.0.0.1/arex
