@@ -86,7 +86,7 @@
         state: present
         create: yes 
         dest: /etc/grid-security/testCA.allowed-subjects
-        line: "{{ proxy_dn.stdout }}"
+        line: "\"{{ proxy_dn.stdout }}\""
    
     #- name: Set proxy file owner as root 
     #
