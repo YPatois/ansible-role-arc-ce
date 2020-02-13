@@ -76,11 +76,15 @@
     
     - name: Map DN to current account in grid-mapfile
       lineinfile:
+        state: present
+        create: yes 
         dest: /etc/grid-security/grid-mapfile
         line: '"{{ proxy_dn.stdout }}" {{ ansible_env.SUDO_USER }}'
 
     - name: Add DN to current authgroup file
       lineinfile:
+        state: present
+        create: yes 
         dest: /etc/grid-security/testCA.allowed-subjects
         line: "{{ proxy_dn.stdout }}"
    
