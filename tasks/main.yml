@@ -88,9 +88,24 @@
         dest: /etc/grid-security/testCA.allowed-subjects
         line: "\"{{ proxy_dn.stdout }}\""
    
-    #- name: Set proxy file owner as root 
-    #
-    #
+    - name: Set proxy file owner as root 
+      file:
+        path: "{{ proxy_file }}"
+        owner: "{{ ansible_env.USER }}"
+        group: "{{ ansible_env.USER }}"
+        mode: '0600' 
+        
+    - name: Create $HOME/.arc directory
+      file:
+        path: "{{ ansible_env.HOME }}/.arc"
+        state: directory
+    
+    - name: Copy client.conf to .arc directory
+      copy:
+        src: /etc/arc/client.conf
+        dest: "{{ ansible_env.HOME }}/.arc/client.conf"
+        mode: '0644'
+
     - name: Set proxypath in arc.client (arcinfo not working with X509_USER_PROXY)
       replace:
         path: "{{ ansible_env.HOME }}/.arc/client.conf"
