@@ -11,7 +11,7 @@ arc_frontend_packages:
  - nordugrid-arc-aris
  - nordugrid-arc-arex
  - nordugrid-arc-hed
- - nordugrid-arc-python
+ - nordugrid-arc-plugins-python
  - nordugrid-arc-plugins-globus
  - time # needed for the validate operation
 arc_frontend_services:
