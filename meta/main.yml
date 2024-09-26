@@ -10,6 +10,6 @@ galaxy_info:
   - name: CentOS
     versions:
     - 7
-dependencies:
-  - { role: 'umd', release: 4 }
-  - { role: 'grid-security' }
+#dependencies:
+#  - { role: 'umd', release: 4 }
+#  - { role: 'grid-security' }
