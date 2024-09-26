@@ -8,22 +8,119 @@ hostname={{ ansible_fqdn }}
 x509_host_key = {{ arc_x509_user_key }}
 x509_host_cert = {{ arc_x509_user_cert }}
 x509_cert_dir={{ arc_x509_cert_dir }}
+voms_processing=standard
 
-[authgroup:zero]
-file = /etc/grid-security/testCA.allowed-subjects
+[authtokens]
+
+
+#[authgroup: lcas]
+#plugin = 10 /usr/libexec/arc/arc-lcas %D %P liblcas.so /usr/lib64 /etc/lcas/#lcas.db
+
+
+[authgroup: gridmapusers]
+file = /etc/grid-security/grid-mapfile
+
+[authgroup: alice]
+voms = alice * * *
+
+[authgroup: belle]
+voms = belle * * *
+
+[authgroup: biomed]
+voms = biomed * * *
+
+[authgroup: cms]
+voms = cms * * *
+
+[authgroup: dteam]
+voms = dteam * * *
+
+[authgroup: ops]
+voms = ops * * *
+
+[authgroup: vo.agata.org]
+voms = vo.agata.org * * *
+
+[authgroup: vo.complex-systems.eu]
+voms = vo.complex-systems.eu * * *
+
+[authgroup: vo.formation.idgrilles.fr]
+voms = vo.formation.idgrilles.fr * * *
+
+[authgroup: vo.france-grilles.fr]
+voms = vo.france-grilles.fr * * *
+
+[authgroup: vo.grand-est.fr]
+voms = vo.grand-est.fr * * *
+
+[authgroup: vo.sbg.in2p3.fr]
+voms = vo.sbg.in2p3.fr * * *
+
+[authgroup:allvos]
+authgroup = alice
+authgroup = belle
+authgroup = biomed
+authgroup = cms
+authgroup = dteam
+authgroup = ops
+authgroup = vo.agata.org
+authgroup = vo.complex-systems.eu
+authgroup = vo.formation.idgrilles.fr
+authgroup = vo.france-grilles.fr
+authgroup = vo.grand-est.fr
+authgroup = vo.sbg.in2p3.fr
+
+
+[authgroup:any]
+all=yes
 
 [mapping]
-map_to_user = zero nobody:nobody
+# FIXME : for those two groups I'm not sure the mappingis correct (actually sure it's not for the second)
+map_to_user = wlcg_iam opss:ops
+map_to_user = egi_aai egi:egi
+# Here better
+map_to_user = cms_iam_pilot cmspilot:cms
+map_to_user = cms_iam_test cmsdu:cms
+map_to_user = cms_iam_itb cmsiamitb:cms
+
+#map_with_plugin = lcas 30 /usr/libexec/arc/arc-lcmaps %D %P liblcmaps.so /usr/#lib64 /etc/lcmaps/lcmaps.db voms
+
+map_with_file = legacy /etc/grid-security/grid-mapfile
+
+
+[authgroup: legacy]
+file = /etc/grid-security/grid-mapfile
+
+policy_on_nomap=stop
+
 
 [lrms]
-lrms = fork
+lrms = slurm
 
 [arex]
 
 [arex/ws]
 
 [arex/ws/jobs]
-allowaccess = zero
+allowaccess=wlcg_iam
+allowaccess=egi_aai
+allowaccess=cms_iam_pilot
+allowaccess=cms_iam_test
+allowaccess=cms_iam_itb
+
+allowaccess=alice
+allowaccess=belle
+allowaccess=biomed
+allowaccess=cms
+allowaccess=dteam
+allowaccess=ops
+allowaccess=vo.agata.org
+allowaccess=vo.complex-systems.eu
+allowaccess=vo.formation.idgrilles.fr
+allowaccess=vo.france-grilles.fr
+allowaccess=vo.grand-est.fr
+allowaccess=vo.sbg.in2p3.fr
+allownew=yes
 
 [gridftpd]
 
@@ -35,5 +132,78 @@ allowaccess = zero
 
 [infosys/cluster]
 
-[queue:fork]
+[queue:alice]
+comment = Dedicated queue for ALICE
+allowaccess = alice
+advertisedvo = alice
+defaultmemory = 3500
+benchmark=HEPSPEC 12.84
+
+[queue:belle]
+comment = Dedicated queue for Belle
+allowaccess = belle
+advertisedvo = belle
+benchmark=HEPSPEC 12.84
+
+[queue:biomed]
+comment = Dedicated queue for Biomed
+allowaccess = biomed
+advertisedvo = biomed
+benchmark=HEPSPEC 12.84
+
+[queue:cms]
+comment = Dedicated queue for CMS
+allowaccess = cms
+advertisedvo = cms
+benchmark=HEPSPEC 12.84
+
+[queue:dteam]
+comment = Dedicated queue for Dteam
+allowaccess = dteam
+advertisedvo = dteam
+benchmark=HEPSPEC 12.84
+
+[queue:ops]
+comment = Realtime queue for infrastructure testing
+allowaccess = ops
+advertisedvo = ops
+benchmark=HEPSPEC 12.84
+
+[queue: vo.agata.org]
+comment = Dedicated queue for vo.agata.org users
+allowaccess = vo.agata.org
+advertisedvo = vo.agata.org
+benchmark=HEPSPEC 12.84
+
+[queue:complex_systems]
+comment = Dedicated queue for vo.complex-systems.eu users
+allowaccess = vo.complex-systems.eu
+advertisedvo = vo.complex-systems.eu
+benchmark=HEPSPEC 12.84
+
+[queue: formation.idgri]
+comment = Dedicated queue for vo.formation.idgrilles.fr users
+allowaccess = vo.formation.idgrilles.fr
+advertisedvo = vo.formation.idgrilles.fr
+benchmark=HEPSPEC 12.84
+
+[queue: france_grilles]
+comment = Dedicated queue for vo.france-grilles.fr users
+allowaccess = vo.france-grilles.fr
+advertisedvo = vo.france-grilles.fr
+benchmark=HEPSPEC 12.84
+
+[queue: vo.grand_est.fr]
+comment = Dedicated queue for vo.grand-est.fr
+allowaccess = vo.grand-est.fr
+advertisedvo = vo.grand-est.fr
+benchmark=HEPSPEC 12.84
+maxwalltime = 259200
+
+[queue:vo.sbg.in2p3.fr]
+comment = Dedicated queue for vo.sbg.in2p3.fr
+allowaccess = vo.sbg.in2p3.fr
+advertisedvo = vo.sbg.in2p3.fr
+benchmark=HEPSPEC 12.84
+maxwalltime = 259200
 
