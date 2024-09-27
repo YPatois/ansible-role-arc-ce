@@ -24,6 +24,7 @@ arc_frontend_services:
     - nordugrid-arc-inforeg
   6:
     - arc-arex.service
+    - arc-arex-ws.service
     - arc-gridftpd.service
     - arc-infosys-ldap.service
 arc_x509_cert_dir: "/etc/grid-security/certificates"
