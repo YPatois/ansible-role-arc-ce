@@ -1,0 +1,14 @@
+---
+# Gridftp
+- firewalld:
+    port: 2811/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+# A-REX-WS
+- firewalld:
+    port: 443/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes

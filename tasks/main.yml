@@ -8,6 +8,8 @@
 #    - testing
 #    - all
 
+- include_tasks: firewall.yml
+
 - name: arc_frontend_griddir must be defined
   assert:
     that: "arc_frontend_griddir is defined"
