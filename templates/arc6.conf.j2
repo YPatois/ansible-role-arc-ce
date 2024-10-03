@@ -96,8 +96,10 @@ policy_on_nomap=stop
 
 [lrms]
 lrms = slurm
+slurm_use_sacct = no  # FIXME: we should but not now.
 
 [arex]
+sessiondir = {{ arc_frontend_sessiondir }}
 
 [arex/ws]
 
