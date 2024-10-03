@@ -15,6 +15,7 @@ arc_frontend_packages:
  - nordugrid-arc6-plugins-globus
  - time # needed for the validate operation
  - lcmaps # Maybe elsewhere?
+ - mlocate # Maybe elsewhere?
 arc_frontend_services:
   5:
     - a-rex
