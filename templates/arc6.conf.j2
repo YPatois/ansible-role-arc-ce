@@ -10,197 +10,86 @@ x509_host_cert = {{ arc_x509_user_cert }}
 x509_cert_dir={{ arc_x509_cert_dir }}
 voms_processing=standard
 
-# [authtokens] FIXME: needed but still failing
-
-
-#[authgroup: lcas]
-#plugin = 10 /usr/libexec/arc/arc-lcas %D %P liblcas.so /usr/lib64 /etc/lcas/#lcas.db
-
-
-[authgroup: gridmapusers]
-file = /etc/grid-security/grid-mapfile
-
-[authgroup: alice]
-voms = alice * * *
-
-[authgroup: belle]
-voms = belle * * *
-
-[authgroup: biomed]
-voms = biomed * * *
-
-[authgroup: cms]
-voms = cms * * *
-
-[authgroup: dteam]
-voms = dteam * * *
-
-[authgroup: ops]
-voms = ops * * *
-
-[authgroup: vo.agata.org]
-voms = vo.agata.org * * *
-
-[authgroup: vo.complex-systems.eu]
-voms = vo.complex-systems.eu * * *
-
-[authgroup: vo.formation.idgrilles.fr]
-voms = vo.formation.idgrilles.fr * * *
-
-[authgroup: vo.france-grilles.fr]
-voms = vo.france-grilles.fr * * *
-
-[authgroup: vo.grand-est.fr]
-voms = vo.grand-est.fr * * *
-
 [authgroup: vo.sbg.in2p3.fr]
 voms = vo.sbg.in2p3.fr * * *
 
-[authgroup:allvos]
-authgroup = alice
-authgroup = belle
-authgroup = biomed
-authgroup = cms
-authgroup = dteam
-authgroup = ops
-authgroup = vo.agata.org
-authgroup = vo.complex-systems.eu
-authgroup = vo.formation.idgrilles.fr
-authgroup = vo.france-grilles.fr
-authgroup = vo.grand-est.fr
-authgroup = vo.sbg.in2p3.fr
-
+[authgroup: legacy]
+file = /etc/grid-security/grid-mapfile
 
 [authgroup:any]
 all=yes
 
 [mapping]
-# FIXME : for those two groups I'm not sure the mappingis correct (actually sure it's not for the second)
-map_to_user = wlcg_iam opss:ops
-map_to_user = egi_aai egi:egi
-# Here better
-map_to_user = cms_iam_pilot cmspilot:cms
-map_to_user = cms_iam_test cmsdu:cms
-map_to_user = cms_iam_itb cmsiamitb:cms
-
-#map_with_plugin = lcas 30 /usr/libexec/arc/arc-lcmaps %D %P liblcmaps.so /usr/#lib64 /etc/lcmaps/lcmaps.db voms
-
 map_with_file = legacy /etc/grid-security/grid-mapfile
 
-
-[authgroup: legacy]
-file = /etc/grid-security/grid-mapfile
-
 policy_on_nomap=stop
-
 
 [lrms]
 lrms = slurm
 slurm_use_sacct = no  # FIXME: we should but not now.
+benchmark=HEPSPEC:13.46
 
 [arex]
 sessiondir = {{ arc_frontend_sessiondir }}
+scratchdir = /var/tmp
+
+[arex/data-staging]
+#loglevel = INFO
+globus_tcp_port_range = 24000,25000
+globus_udp_port_range = 24000,25000
+httpgetpartial = yes
 
 [arex/ws]
 
 [arex/ws/jobs]
-allowaccess=wlcg_iam
-allowaccess=egi_aai
-allowaccess=cms_iam_pilot
-allowaccess=cms_iam_test
-allowaccess=cms_iam_itb
-
-allowaccess=alice
-allowaccess=belle
-allowaccess=biomed
-allowaccess=cms
-allowaccess=dteam
-allowaccess=ops
-allowaccess=vo.agata.org
-allowaccess=vo.complex-systems.eu
-allowaccess=vo.formation.idgrilles.fr
-allowaccess=vo.france-grilles.fr
-allowaccess=vo.grand-est.fr
 allowaccess=vo.sbg.in2p3.fr
 allownew=yes
 
 [gridftpd]
+maxconnections=200
+globus_tcp_port_range=24000,25000
+globus_udp_port_range=24000,25000
+loglevel=3
+
+[gridftpd/jobs]
+allownew=yes
+allowaccess=gridmapusers
 
 [infosys]
 
 [infosys/ldap]
+[infosys/nordugrid]
+
+[infosys/glue2]
+admindomain_name = IN2P3-IRES
+#admindomain_distributed = no
+computingservice_qualitylevel = production
+
+[infosys/glue1]
+glue_site_web=http://iphc.cnrs.fr/
+resource_location=Strasbourg, FR
+resource_latitude=48.721545
+resource_longitude=2.148684
+cpu_scaling_reference_si00=2886
+glue_site_unique_id=IN2P3-IRES
+processor_other_description=Cores=9792, Benchmark=13.46-HEP-SPEC06
 
 [infosys/glue2]
 
 [infosys/cluster]
+nodememory=2048
+maxcputime = 172800
+maxwalltime = 172800
 
-[queue:alice]
-comment = Dedicated queue for ALICE
-allowaccess = alice
-advertisedvo = alice
-defaultmemory = 3500
-benchmark=HEPSPEC 12.84
+opsys=Almalinux
+opsys=9
+architecture = adotf
+nodecpu = adotf
 
-[queue:belle]
-comment = Dedicated queue for Belle
-allowaccess = belle
-advertisedvo = belle
-benchmark=HEPSPEC 12.84
+advertisedvo=vo.sbg.in2p3.fr
+nodememory=16261
 
-[queue:biomed]
-comment = Dedicated queue for Biomed
-allowaccess = biomed
-advertisedvo = biomed
-benchmark=HEPSPEC 12.84
-
-[queue:cms]
-comment = Dedicated queue for CMS
-allowaccess = cms
-advertisedvo = cms
-benchmark=HEPSPEC 12.84
-
-[queue:dteam]
-comment = Dedicated queue for Dteam
-allowaccess = dteam
-advertisedvo = dteam
-benchmark=HEPSPEC 12.84
-
-[queue:ops]
-comment = Realtime queue for infrastructure testing
-allowaccess = ops
-advertisedvo = ops
-benchmark=HEPSPEC 12.84
-
-[queue: vo.agata.org]
-comment = Dedicated queue for vo.agata.org users
-allowaccess = vo.agata.org
-advertisedvo = vo.agata.org
-benchmark=HEPSPEC 12.84
-
-[queue:complex_systems]
-comment = Dedicated queue for vo.complex-systems.eu users
-allowaccess = vo.complex-systems.eu
-advertisedvo = vo.complex-systems.eu
-benchmark=HEPSPEC 12.84
-
-[queue: formation.idgri]
-comment = Dedicated queue for vo.formation.idgrilles.fr users
-allowaccess = vo.formation.idgrilles.fr
-advertisedvo = vo.formation.idgrilles.fr
-benchmark=HEPSPEC 12.84
-
-[queue: france_grilles]
-comment = Dedicated queue for vo.france-grilles.fr users
-allowaccess = vo.france-grilles.fr
-advertisedvo = vo.france-grilles.fr
-benchmark=HEPSPEC 12.84
-
-[queue: vo.grand_est.fr]
-comment = Dedicated queue for vo.grand-est.fr
-allowaccess = vo.grand-est.fr
-advertisedvo = vo.grand-est.fr
-benchmark=HEPSPEC 12.84
-maxwalltime = 259200
+nodeaccess=outbound
 
 [queue:vo.sbg.in2p3.fr]
 comment = Dedicated queue for vo.sbg.in2p3.fr
