@@ -6,9 +6,9 @@ arc_frontend_sessiondir: "{{ arc_frontend_griddir }}/sessiondir"
 arc_frontend_packages:
  - nordugrid-arc6-arex
  - nordugrid-arc6-gridftpd
-# - nordugrid-arc6-gridmap-utils
+ #- nordugrid-arc6-gridmap
  - nordugrid-arc6-infosys-ldap
-# - nordugrid-arc6-aris
+ #- nordugrid-arc6-aris
  - nordugrid-arc6-arex
  - nordugrid-arc6-hed
  - nordugrid-arc6-plugins-python
