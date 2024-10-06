@@ -62,6 +62,16 @@
     enabled: yes
   with_items: "{{ arc_frontend_services[arc_version] | default({}) }}"
 
+# Starts BDII service: FIXME: likely not needed.
+- name: start and enable arc bdii service
+  service:
+    name: bdii
+    state: started
+    enabled: yes
+
+
+
+
 #- name: Validate a-rex service
 #  shell: /etc/init.d/a-rex validate
 
