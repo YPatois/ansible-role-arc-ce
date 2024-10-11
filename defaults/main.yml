@@ -14,7 +14,7 @@ arc_frontend_packages:
  - nordugrid-arc6-plugins-python
  - nordugrid-arc6-plugins-globus
  - time # needed for the validate operation
- - lcmaps # Maybe elsewhere?
+ #- lcmaps # Maybe elsewhere?
  - mlocate # Maybe elsewhere?
 arc_frontend_services:
   5:
@@ -29,7 +29,7 @@ arc_frontend_services:
     - arc-gridftpd.service
     - arc-infosys-ldap.service
 arc_x509_cert_dir: "/etc/grid-security/certificates"
-arc_gridmap: "/etc/grid-security/grid-mapfile"
+#arc_gridmap: "/etc/grid-security/grid-mapfile"
 arc_frontend_cluster_nodecpu: "adotf"
 enable_testing: false
 testing_no_delay: 30
