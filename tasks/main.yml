@@ -54,6 +54,8 @@
     dest: /etc/arc.conf
     owner: root
     mode: 0644
+  notify:
+    - restart arc
 
 - name: start and enable arc frontend services
   service:
@@ -69,7 +71,10 @@
     state: started
     enabled: yes
 
-
+# Handlers
+- handlers:
+    - name: restart arc
+      command: arcctl service restart -a
 
 
 #- name: Validate a-rex service
