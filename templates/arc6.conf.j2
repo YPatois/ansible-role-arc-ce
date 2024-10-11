@@ -13,6 +13,9 @@ voms_processing=standard
 [authgroup: vo.sbg.in2p3.fr]
 voms = vo.sbg.in2p3.fr * * *
 
+[authgroup: biomed]
+voms = biomed * * *
+
 [authgroup: legacy]
 file = /etc/grid-security/grid-mapfile
 
@@ -43,6 +46,7 @@ httpgetpartial = yes
 
 [arex/ws/jobs]
 allowaccess=vo.sbg.in2p3.fr
+allowaccess=biomed
 allownew=yes
 
 [gridftpd]
@@ -87,6 +91,7 @@ architecture = adotf
 nodecpu = adotf
 
 advertisedvo=vo.sbg.in2p3.fr
+advertisedvo=biomed
 nodememory=16261
 
 nodeaccess=outbound
@@ -95,6 +100,13 @@ nodeaccess=outbound
 comment = Dedicated queue for vo.sbg.in2p3.fr
 allowaccess = vo.sbg.in2p3.fr
 advertisedvo = vo.sbg.in2p3.fr
+benchmark=HEPSPEC 12.84
+maxwalltime = 259200
+
+[queue:biomed]
+comment = Dedicated queue for biomed
+allowaccess = biomed
+advertisedvo = biomed
 benchmark=HEPSPEC 12.84
 maxwalltime = 259200
 
