@@ -1,0 +1,3 @@
+# When configuration changes, arc services need to be restarted.
+- name: restart arc
+  command: arcctl service restart -a
