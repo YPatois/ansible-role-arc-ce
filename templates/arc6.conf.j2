@@ -10,46 +10,54 @@ x509_host_cert = {{ arc_x509_user_cert }}
 x509_cert_dir = {{ arc_x509_cert_dir }}
 voms_processing = standard
 
-# Authgroups
+# Authgroups for VOs
 {% for vo in supported_vos %}
 [authgroup: {{ vo }}]
 voms = {{ vo }} * * *
 
 {% endfor %}
 
-# Userlists
+
+# Authgroups for roles
 {% for vo in supported_vos_data_list %}
-[userlist:{{ vo.name }}]
-
-{% if vo.voms_servers is defined %}
-{% for server in vo.voms_servers %}
-{% if server.host is defined %}
-source = vomss://{{ server.host }}:{{ server.admin_port }}/voms/{{ vo.name }}?/{{ vo.name }}
+{% for mapping in vo.voms_mappings %}
+[authgroup: {{ vo.account_prefix }}{{ mapping.suffix }}]
+{% if '=' in mapping.fqan %}
+voms = {{ vo.name }} * {{ mapping.fqan.split('=')[1] }} *
+{% else %}
+voms = {{ vo.name }} {{ mapping.fqan.split('/')[2] }} * *
 {% endif %}
 {% endfor %}
-{% endif %}
-source = file:///etc/grid-security/nordugrid-vo-mappings/{{ vo.name }}-role-mapping
 
-mapped_unixid = .{{ vo.account_prefix }}
- 
 {% endfor %}
 
-[authgroup: legacy]
-file = /etc/grid-security/grid-mapfile
-
-[authgroup:any]
-all=yes
+[authgroup: allvos]
+{% for vo in supported_vos %}
+authgroup = {{ vo }}
+{% endfor %}
 
 [mapping]
-map_with_file = legacy /etc/grid-security/grid-mapfile
+# Mapping from VOs
+{% for vo in supported_vos %}
+map_to_pool = {{ vo }} /etc/grid-security/pool/{{ vo }}
+{% endfor %}
+
+# Mapping from roles
+{% for vo in supported_vos_data_list %}
+{% for mapping in vo.voms_mappings %}
+{% if mapping.description == 'pilot' or mapping.description == 'SW manager' %}
+map_to_user = {{ vo.account_prefix }}{{ mapping.suffix }} {{ vo.account_prefix }}{{ mapping.suffix }}:{{ vo.name }}
+{% else %}
+map_to_pool = {{ vo.account_prefix }}{{ mapping.suffix }} /etc/grid-security/pool/{{ vo.account_prefix }}{{ mapping.suffix }}
+{% endif %}
+{% endfor %}
+{% endfor %}
 
 policy_on_nomap=stop
 
-[nordugridmap]
-
 [lrms]
 lrms = slurm
-slurm_use_sacct = no  # FIXME: we should but not now.
+slurm_use_sacct = yes
 benchmark=HEPSPEC:13.46
 
 [arex]
@@ -89,7 +97,7 @@ loglevel = 3
 
 [gridftpd/jobs]
 allownew = yes
-allowaccess = gridmapusers
+allowaccess = allvos
 
 [infosys]
 
@@ -135,4 +143,6 @@ allowaccess = {{ vo }}
 advertisedvo = {{ vo }}
 defaultmemory = 3500
 benchmark=HEPSPEC 13.46
+
 {% endfor %}
+
