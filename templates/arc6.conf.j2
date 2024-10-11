@@ -7,14 +7,39 @@
 hostname={{ ansible_fqdn }}
 x509_host_key = {{ arc_x509_user_key }}
 x509_host_cert = {{ arc_x509_user_cert }}
-x509_cert_dir={{ arc_x509_cert_dir }}
-voms_processing=standard
+x509_cert_dir = {{ arc_x509_cert_dir }}
+voms_processing = standard
 
-[authgroup: vo.sbg.in2p3.fr]
-voms = vo.sbg.in2p3.fr * * *
+# Authgroups
+{% for vo in supported_vos %}
+[authgroup: {{ vo }}]
+voms = {{ vo }} * * *
 
-[authgroup: biomed]
-voms = biomed * * *
+{% endfor %}
+
+# Userlists
+{% for vo in supported_vos_data_list %}
+[userlist:{{ vo.name }}]
+
+{% if vo.voms_servers is defined %}
+{% for server in vo.voms_servers %}
+{% if server.host is defined %}
+source = vomss://{{ server.host }}:{{ server.port }}/{{ vo.name }}?/{{ vo.name }} .{{ vo.name  | replace('.','') | replace('-','') }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+mapped_unixid = .{{ vo.account_prefix }}
+
+{% for mapping in vo.voms_mappings %}
+{% if mapping.description == 'pilot' or mapping.description == 'SW manager' %}
+voms_fqan_map = {{ mapping.fqan }} {{ vo.account_prefix }}{{ mapping.suffix }}
+{% else %}
+voms_fqan_map = {{ mapping.fqan }} .{{ vo.account_prefix }}{{ mapping.suffix }}
+{% endif %}
+{% endfor %}
+ 
+{% endfor %}
 
 [authgroup: legacy]
 file = /etc/grid-security/grid-mapfile
@@ -26,6 +51,8 @@ all=yes
 map_with_file = legacy /etc/grid-security/grid-mapfile
 
 policy_on_nomap=stop
+
+[nordugridmap]
 
 [lrms]
 lrms = slurm
@@ -45,29 +72,36 @@ httpgetpartial = yes
 [arex/ws]
 
 [arex/ws/jobs]
-allowaccess=vo.sbg.in2p3.fr
-allowaccess=biomed
-allownew=yes
+{% for vo in supported_vos %}
+allowaccess = {{ vo }}
+{% endfor %}
+
+[arex/jura]
+logfile = /var/log/arc/jura.log
+loglevel = INFO
+urdelivery_frequency = 3600
+x509_host_key = {{ arc_x509_user_key }}
+x509_host_cert = {{ arc_x509_user_cert }}
+x509_cert_dir = {{ arc_x509_cert_dir }}
+
+[arex/jura/apel: EGI]
+targeturl = https://msg.argo.grnet.gr
+gocdb_name=IN2P3-IRES
 
 [gridftpd]
-maxconnections=200
-globus_tcp_port_range=24000,25000
-globus_udp_port_range=24000,25000
-loglevel=3
+maxconnections = 200
+globus_tcp_port_range = 24000,25000
+globus_udp_port_range = 24000,25000
+loglevel = 3
 
 [gridftpd/jobs]
-allownew=yes
-allowaccess=gridmapusers
+allownew = yes
+allowaccess = gridmapusers
 
 [infosys]
 
 [infosys/ldap]
 [infosys/nordugrid]
-
-[infosys/glue2]
-admindomain_name = IN2P3-IRES
-#admindomain_distributed = no
-computingservice_qualitylevel = production
 
 [infosys/glue1]
 glue_site_web=http://iphc.cnrs.fr/
@@ -79,6 +113,9 @@ glue_site_unique_id=IN2P3-IRES
 processor_other_description=Cores=9792, Benchmark=13.46-HEP-SPEC06
 
 [infosys/glue2]
+admindomain_name = IN2P3-IRES
+#admindomain_distributed = no
+computingservice_qualitylevel = testing
 
 [infosys/cluster]
 nodememory=2048
@@ -90,23 +127,19 @@ opsys=9
 architecture = adotf
 nodecpu = adotf
 
-advertisedvo=vo.sbg.in2p3.fr
-advertisedvo=biomed
+{% for vo in supported_vos %}
+advertisedvo = {{ vo }}
+{% endfor %}
+
 nodememory=16261
 
 nodeaccess=outbound
 
-[queue:vo.sbg.in2p3.fr]
-comment = Dedicated queue for vo.sbg.in2p3.fr
-allowaccess = vo.sbg.in2p3.fr
-advertisedvo = vo.sbg.in2p3.fr
-benchmark=HEPSPEC 12.84
-maxwalltime = 259200
-
-[queue:biomed]
-comment = Dedicated queue for biomed
-allowaccess = biomed
-advertisedvo = biomed
-benchmark=HEPSPEC 12.84
-maxwalltime = 259200
-
+{% for vo in supported_vos %}
+[queue:{{ vo }}]
+comment = Dedicated queue for {{ vo }}
+allowaccess = {{ vo }}
+advertisedvo = {{ vo }}
+defaultmemory = 3500
+benchmark=HEPSPEC 13.46
+{% endfor %}
