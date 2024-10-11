@@ -70,16 +70,6 @@
     src: "pool.j2"
     dest: "{{ grid_security_dir }}/pools/{{ item.0.account_prefix }}{{ item.1.suffix }}/pool"
   loop: "{{ supported_vos_data_list | subelements('voms_mappings', 'skip_missing=True') }}"
-
-- name: Create nordugridmap vo roles mapping
-  template:
-    src: "role-mapping.j2"
-    dest: "{{ grid_security_dir }}/nordugrid-vo-mappings/{{ vo.name }}-role-mapping"
-    owner: root
-    mode: 0644
-  loop: "{{ supported_vos_data_list }}"
-  loop_control:
-    loop_var: "vo"
   
 - name: Template arc.conf file
   template:
