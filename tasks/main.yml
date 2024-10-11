@@ -47,6 +47,21 @@
     path: "{{ arc_frontend_controldir }}"
     state: directory
 
+- name: Create nordugridmap conf directory
+  file:
+    path: "{{ grid_security_dir }}/nordugrid-vo-mappings"
+    state: directory
+
+- name: Create nordugridmap vo roles mapping
+  template:
+    src: "role-mapping.j2"
+    dest: "{{ grid_security_dir }}/nordugrid-vo-mappings/{{ vo.name }}-role-mapping"
+    owner: root
+    mode: 0644
+  loop: "{{ supported_vos_data_list }}"
+  loop_control:
+    loop_var: "vo"
+  
 - name: Template arc.conf file
   template:
     backup: yes
@@ -55,7 +70,7 @@
     owner: root
     mode: 0644
   notify:
-    - restart arc
+    - "restart arc"
 
 - name: start and enable arc frontend services
   service:
@@ -71,90 +86,10 @@
     state: started
     enabled: yes
 
-# Handlers
-- handlers:
-    - name: restart arc
-      command: arcctl service restart -a
-
+# Run handlers
+- meta: flush_handlers
 
 #- name: Validate a-rex service
 #  shell: /etc/init.d/a-rex validate
 
-- block:
-    - name: Set variables
-      set_fact:
-        jobid_file: "/tmp/jobids.info"
-
-    - name: Install ARC and voms clients
-      package:
-        name: "{{ item }}"
-      with_items: "{{ os_vars.voms_pkgs }} + [ 'nordugrid-arc-client' ]"
-    
-    - name: Get DN from user proxy certificate
-      shell: /usr/bin/voms-proxy-info -file "{{ proxy_file }}" -identity
-      register: proxy_dn
-    
-    - name: Map DN to current account in grid-mapfile
-      lineinfile:
-        state: present
-        create: yes 
-        dest: /etc/grid-security/grid-mapfile
-        line: '"{{ proxy_dn.stdout }}" {{ ansible_env.SUDO_USER }}'
-
-    - name: Add DN to current authgroup file
-      lineinfile:
-        state: present
-        create: yes 
-        dest: /etc/grid-security/testCA.allowed-subjects
-        line: "\"{{ proxy_dn.stdout }}\""
-   
-    - name: Set proxy file owner as root 
-      file:
-        path: "{{ proxy_file }}"
-        owner: "{{ ansible_env.USER }}"
-        group: "{{ ansible_env.USER }}"
-        mode: '0600' 
-        
-    - name: Create $HOME/.arc directory
-      file:
-        path: "{{ ansible_env.HOME }}/.arc"
-        state: directory
-    
-    - name: Copy client.conf to .arc directory
-      copy:
-        src: /etc/arc/client.conf
-        dest: "{{ ansible_env.HOME }}/.arc/client.conf"
-        mode: '0644'
-
-    - name: Set proxypath in arc.client (arcinfo not working with X509_USER_PROXY)
-      replace:
-        path: "{{ ansible_env.HOME }}/.arc/client.conf"
-        regexp: "^#proxypath.+"
-        replace: "proxypath={{ proxy_file }}"
-
-    - name: Check arex endpoint
-      shell: arcinfo -c https://127.0.0.1/arex
-
-    - name: Get proxy info
-      shell: /usr/bin/arcproxy -I -P "{{ proxy_file }}"
-      args:
-        warn: no
-      register: proxy_info
- 
-    - debug:
-        msg: "{{ proxy_info.stdout }}"
-
-    - name: Submit job
-      shell: /usr/bin/arctest -c "{{ ansible_fqdn }}" -J 1 -o "{{ jobid_file }}"
-  
-    - name: Wait for job to end ({{ testing_no_delay }}s delay, {{testing_no_retries}}s retries)
-      shell: /usr/bin/arcstat -i "{{ jobid_file }}"
-      register: job_status
-      until: job_status.stdout.find("Finished") != -1
-      retries: "{{ testing_no_retries }}"
-      delay: "{{ testing_no_delay }}"
-  environment:
-    X509_USER_PROXY: "{{ proxy_file }}"
-  when: enable_testing 
-  tags:
-    - testing
+# FIXME: Removed test block, may add it back in the future

@@ -24,20 +24,13 @@ voms = {{ vo }} * * *
 {% if vo.voms_servers is defined %}
 {% for server in vo.voms_servers %}
 {% if server.host is defined %}
-source = vomss://{{ server.host }}:{{ server.port }}/{{ vo.name }}?/{{ vo.name }} .{{ vo.name  | replace('.','') | replace('-','') }}
+source = vomss://{{ server.host }}:{{ server.admin_port }}/voms/{{ vo.name }}?/{{ vo.name }}
 {% endif %}
 {% endfor %}
 {% endif %}
+source = file:///etc/grid-security/nordugrid-vo-mappings/{{ vo.name }}-role-mapping
 
 mapped_unixid = .{{ vo.account_prefix }}
-
-{% for mapping in vo.voms_mappings %}
-{% if mapping.description == 'pilot' or mapping.description == 'SW manager' %}
-voms_fqan_map = {{ mapping.fqan }} {{ vo.account_prefix }}{{ mapping.suffix }}
-{% else %}
-voms_fqan_map = {{ mapping.fqan }} .{{ vo.account_prefix }}{{ mapping.suffix }}
-{% endif %}
-{% endfor %}
  
 {% endfor %}
 
