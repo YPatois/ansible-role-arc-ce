@@ -39,7 +39,7 @@ authgroup = {{ vo }}
 [mapping]
 # Mapping from VOs
 {% for vo in supported_vos %}
-map_to_pool = {{ vo }} /etc/grid-security/pool/{{ vo }}
+map_to_pool = {{ vo }} /etc/grid-security/pools/{{ vo }}
 {% endfor %}
 
 # Mapping from roles
@@ -48,7 +48,7 @@ map_to_pool = {{ vo }} /etc/grid-security/pool/{{ vo }}
 {% if mapping.description == 'pilot' or mapping.description == 'SW manager' %}
 map_to_user = {{ vo.account_prefix }}{{ mapping.suffix }} {{ vo.account_prefix }}{{ mapping.suffix }}:{{ vo.name }}
 {% else %}
-map_to_pool = {{ vo.account_prefix }}{{ mapping.suffix }} /etc/grid-security/pool/{{ vo.account_prefix }}{{ mapping.suffix }}
+map_to_pool = {{ vo.account_prefix }}{{ mapping.suffix }} /etc/grid-security/pools/{{ vo.account_prefix }}{{ mapping.suffix }}
 {% endif %}
 {% endfor %}
 {% endfor %}
