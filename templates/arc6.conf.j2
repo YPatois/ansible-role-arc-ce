@@ -10,6 +10,8 @@ x509_host_cert = {{ arc_x509_user_cert }}
 x509_cert_dir = {{ arc_x509_cert_dir }}
 voms_processing = standard
 
+# FIXME: for now 
+
 # Authgroups for VOs
 {% for vo in supported_vos %}
 [authgroup: {{ vo }}]
@@ -111,7 +113,7 @@ resource_latitude=48.721545
 resource_longitude=2.148684
 cpu_scaling_reference_si00=2886
 glue_site_unique_id=IN2P3-IRES
-processor_other_description=Cores=9792, Benchmark=13.46-HEP-SPEC06
+processor_other_description=Cores=32, Benchmark=13.46-HEP-SPEC06
 
 [infosys/glue2]
 admindomain_name = IN2P3-IRES
