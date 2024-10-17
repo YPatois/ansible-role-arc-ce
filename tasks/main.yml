@@ -49,27 +49,27 @@
 
 - name: Create arc pool directories
   file:
-    path: "{{ grid_security_dir }}/pools/{{ item }}"
+    path: "{{ gridsite_grid_security_dir }}/pools/{{ item }}"
     state: directory
-  loop: "{{ supported_vos }}"
+  loop: "{{ gridsite_supported_vos }}"
 
 - name: Create arc pool file for main vos
   template:
     src: "pool_vo.j2"
-    dest: "{{ grid_security_dir }}/pools/{{ item.name }}/pool"
-  loop: "{{ supported_vos_data_list }}"
+    dest: "{{ gridsite_grid_security_dir }}/pools/{{ item.name }}/pool"
+  loop: "{{ gridsite_supported_vos_data_list }}"
 
 - name: Create arc vo roles pools directories
   file:
-    path: "{{ grid_security_dir }}/pools/{{ item.0.account_prefix }}{{ item.1.suffix }}"
+    path: "{{ gridsite_grid_security_dir }}/pools/{{ item.1.group }}"
     state: directory
-  loop: "{{ supported_vos_data_list | subelements('voms_mappings', 'skip_missing=True') }}"
+  loop: "{{ gridsite_supported_vos_data_list | subelements('voms_mappings', 'skip_missing=True') }}"
 
 - name: Create arc vo roles pools files
   template:
     src: "pool.j2"
-    dest: "{{ grid_security_dir }}/pools/{{ item.0.account_prefix }}{{ item.1.suffix }}/pool"
-  loop: "{{ supported_vos_data_list | subelements('voms_mappings', 'skip_missing=True') }}"
+    dest: "{{ gridsite_grid_security_dir }}/pools/{{ item.1.group }}/pool"
+  loop: "{{ gridsite_supported_vos_data_list | subelements('voms_mappings', 'skip_missing=True') }}"
   
 - name: Template arc.conf file
   template:

@@ -13,7 +13,7 @@ voms_processing = standard
 # FIXME: for now 
 
 # Authgroups for VOs
-{% for vo in supported_vos %}
+{% for vo in gridsite_supported_vos %}
 [authgroup: {{ vo }}]
 voms = {{ vo }} * * *
 
@@ -21,9 +21,9 @@ voms = {{ vo }} * * *
 
 
 # Authgroups for roles
-{% for vo in supported_vos_data_list %}
+{% for vo in gridsite_supported_vos_data_list %}
 {% for mapping in vo.voms_mappings %}
-[authgroup: {{ vo.account_prefix }}{{ mapping.suffix }}]
+[authgroup: {{ mapping.group }}]
 {% if '=' in mapping.fqan %}
 voms = {{ vo.name }} * {{ mapping.fqan.split('=')[1] }} *
 {% else %}
@@ -34,23 +34,23 @@ voms = {{ vo.name }} {{ mapping.fqan.split('/')[2] }} * *
 {% endfor %}
 
 [authgroup: allvos]
-{% for vo in supported_vos %}
+{% for vo in gridsite_supported_vos %}
 authgroup = {{ vo }}
 {% endfor %}
 
 [mapping]
 # Mapping from VOs
-{% for vo in supported_vos %}
+{% for vo in gridsite_supported_vos %}
 map_to_pool = {{ vo }} /etc/grid-security/pools/{{ vo }}
 {% endfor %}
 
 # Mapping from roles
-{% for vo in supported_vos_data_list %}
+{% for vo in gridsite_supported_vos_data_list %}
 {% for mapping in vo.voms_mappings %}
 {% if mapping.description == 'pilot' or mapping.description == 'SW manager' %}
-map_to_user = {{ vo.account_prefix }}{{ mapping.suffix }} {{ vo.account_prefix }}{{ mapping.suffix }}:{{ vo.name }}
+map_to_user = {{ mapping.pool_accounts.0.account }} {{ mapping.pool_accounts.0.account }}:{{ vo.name }}
 {% else %}
-map_to_pool = {{ vo.account_prefix }}{{ mapping.suffix }} /etc/grid-security/pools/{{ vo.account_prefix }}{{ mapping.suffix }}
+map_to_pool = {{ mapping.group }} /etc/grid-security/pools/{{ mapping.group }}
 {% endif %}
 {% endfor %}
 {% endfor %}
@@ -75,7 +75,7 @@ httpgetpartial = yes
 [arex/ws]
 
 [arex/ws/jobs]
-{% for vo in supported_vos %}
+{% for vo in gridsite_supported_vos %}
 allowaccess = {{ vo }}
 {% endfor %}
 
@@ -130,7 +130,7 @@ opsys=9
 architecture = adotf
 nodecpu = adotf
 
-{% for vo in supported_vos %}
+{% for vo in gridsite_supported_vos %}
 advertisedvo = {{ vo }}
 {% endfor %}
 
@@ -138,7 +138,7 @@ nodememory=16261
 
 nodeaccess=outbound
 
-{% for vo in supported_vos %}
+{% for vo in gridsite_supported_vos %}
 [queue:{{ vo }}]
 comment = Dedicated queue for {{ vo }}
 allowaccess = {{ vo }}

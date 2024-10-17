@@ -1,3 +1,3 @@
-{% for i in range(1,vo_pool_accounts_count+1) %}
-{{ item.account_prefix }}{{ "%03d" | format(i) }}
+{% for account in item.pool_accounts %}
+{{ account.account }}
 {% endfor %}
