@@ -95,6 +95,10 @@
     state: started
     enabled: yes
 
+# Add ENV/PROXY to arc.conf
+- name: Flag ENV/PROXY in arc
+  command: arcctl rte enable ENV/PROXY
+
 # Run handlers
 - meta: flush_handlers
 
