@@ -99,6 +99,10 @@
 - name: Flag ENV/PROXY in arc
   command: arcctl rte enable ENV/PROXY
 
+# Add ENV/GLITE to arc.conf
+- name: Flag ENV/GLITE in arc
+  command: arcctl rte enable ENV/GLITE --dummy
+
 # Run handlers
 - meta: flush_handlers
 
