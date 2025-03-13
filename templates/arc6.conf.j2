@@ -47,7 +47,7 @@ map_to_pool = {{ vo }} /etc/grid-security/pools/{{ vo }}
 # Mapping from roles
 {% for vo in gridsite_supported_vos_data_list %}
 {% for mapping in vo.roles %}
-{% if mapping.description == 'pilot' or mapping.description == 'SW manager' %}
+{% if mapping.name == 'pilot' or mapping.name == 'lcgadmin'  %}
 map_to_user = {{ mapping.pool_accounts.0.account }} {{ mapping.pool_accounts.0.account }}:{{ vo.name }}
 {% else %}
 map_to_pool = {{ mapping.group }} /etc/grid-security/pools/{{ mapping.group }}

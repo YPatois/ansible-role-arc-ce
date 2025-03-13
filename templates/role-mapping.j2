@@ -2,7 +2,7 @@
 "/{{ vo.name }}/Role=NULL" .{{ vo.account_prefix }}
 "/{{ vo.name }}/Role=NULL/Capability=NULL" .{{ vo.account_prefix }}
 {% for mapping in vo.roles %}
-{% if mapping.description == 'pilot' or mapping.description == 'SW manager' %}
+{% if mapping.name == 'pilot' or mapping.name == 'lcgadmin' %}
 {% set maybedot = "" %}
 {% else %}
 {% set maybedot = "." %}
