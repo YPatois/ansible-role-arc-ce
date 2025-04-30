@@ -27,6 +27,18 @@
     state: latest
   with_items: "{{ arc_frontend_packages | default({}) }}"
 
+# At start a script test that arc config is correct.
+# Unfortunately, the script: /usr/libexec/arc/arc-config-check is
+# trying to access  europe.pool.ntp.org which cannot be reached.
+# The occurences of europe.pool.ntp.org have to be changed
+# to the content of grid_ntp_server" variable.
+- name: Fix NTP server in arc.conf
+  replace:
+    path:  /usr/libexec/arc/arc-config-check
+    regexp: '(.*)europe.pool.ntp.org(.*)'
+    replace: '\1{{ grid_ntpd_server }}\2'
+
+
 - name: Create Grid dir 
   file:
     path: "{{ arc_frontend_griddir }}"
