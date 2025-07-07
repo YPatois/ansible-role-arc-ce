@@ -10,7 +10,8 @@ x509_host_cert = {{ arc_x509_user_cert }}
 x509_cert_dir = {{ arc_x509_cert_dir }}
 voms_processing = standard
 
-# FIXME: for now 
+# Enabling autoken access
+[authtokens]
 
 # Authgroups for VOs
 {% for vo in gridsite_supported_vos %}
@@ -28,6 +29,11 @@ voms = {{ vo }} * * *
 voms = {{ vo.name }} * {{ mapping.fqan.split('=')[1] }} *
 {% else %}
 voms = {{ vo.name }} {{ mapping.fqan.split('/')[2] }} * *
+{% endif %}
+{% if mapping.tokens is defined %}
+{% for token in mapping.tokens %}
+authtokens = {{ token }}
+{% endfor %}
 {% endif %}
 {% endfor %}
 
