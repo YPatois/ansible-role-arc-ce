@@ -78,8 +78,8 @@ httpgetpartial = yes
 [arex/ws]
 
 [arex/ws/jobs]
-{% for vo in gridsite_supported_vos %}
-allowaccess = {{ vo }}
+{% for vo in gridsite_supported_vos_data_list %}
+allowaccess = {{ vo.name }}
 {% for mapping in vo.roles %}
 allowaccess = {{ mapping.group }}
 {% endfor %}
@@ -124,16 +124,14 @@ nodeaccess = outbound
 advertisedvo = {{ vo }}
 {% endfor %}
 
-{% for vo in gridsite_supported_vos %}
-[queue:{{ vo }}]
-comment = Dedicated queue for {{ vo }}
-allowaccess = {{ vo }}
+{% for vo in gridsite_supported_vos_data_list %}
+[queue:{{ vo.name }}]
+comment = Dedicated queue for {{ vo.name }}
+allowaccess = {{ vo.name }}
 {% for mapping in vo.roles %}
 allowaccess = {{ mapping.group }}
 {% endfor %}
-advertisedvo = {{ vo }}
-defaultmemory = 3500
-benchmark=HEPSPEC 13.46
+advertisedvo = {{ vo.name }}
 
 {% endfor %}
 
