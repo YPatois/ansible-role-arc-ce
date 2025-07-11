@@ -1,0 +1,46 @@
+---
+
+arc_frontend_packages:
+  6:
+    - nordugrid-arc6
+    - nordugrid-arc6-arex
+    - nordugrid-arc6-gridftpd
+    #- nordugrid-arc6-gridmap
+    - nordugrid-arc6-infosys-ldap
+    #- nordugrid-arc6-aris
+    - nordugrid-arc6-arex
+    - nordugrid-arc6-hed
+    - nordugrid-arc6-plugins-python
+    - nordugrid-arc6-plugins-globus
+    - time # needed for the validate operation
+    #- lcmaps # Maybe elsewhere?
+    - mlocate # Maybe elsewhere?
+  7:
+    - nordugrid-arc7
+    - nordugrid-arc7-arex
+    - nordugrid-arc7-infosys-ldap
+    - nordugrid-arc7-arex
+    - nordugrid-arc7-hed
+    - nordugrid-arc7-plugins-python
+    - nordugrid-arc7-plugins-globus
+    - nordugrid-arc7-plugins-gridftp
+    - nordugrid-arc7-community-rtes
+    - time # needed for to validate operations
+    - mlocate # Maybe elsewhere?
+arc_frontend_services:
+  5:
+    - a-rex
+    - gridftpd
+    - nordugrid-arc-slapd
+    - nordugrid-arc-bdii
+    - nordugrid-arc-inforeg
+  6:
+    - arc-arex.service
+    - arc-arex-ws.service
+    - arc-gridftpd.service
+    - arc-infosys-ldap.service
+  7:
+    - arc-arex.service
+    - arc-arex-ws.service
+    #- arc-gridftpd.service
+    - arc-infosys-ldap.service
