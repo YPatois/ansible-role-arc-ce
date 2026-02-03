@@ -132,6 +132,14 @@
 - name: Flag ENV/GLITE in arc
   command: arcctl rte enable ENV/GLITE --dummy
 
+# Jobs are by default using certs from /etc/pki
+# But local jobs are relying on /etc/grid-security
+# As each WN has its own /etc/grid-security, we don't need to copy the certs
+- name: Set X509_CERT_DIR for jobs
+  command: arcctl rte params-set ENV/JOB X509_CERT_DIR /etc/grid-security/certificates
+- name: Set COPY_CACERT_DIR for jobs
+  command: arcctl rte params-set ENV/JOB COPY_CACERT_DIR No
+
 # Run handlers
 - meta: flush_handlers
 
