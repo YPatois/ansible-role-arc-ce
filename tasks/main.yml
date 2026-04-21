@@ -136,9 +136,9 @@
 # But local jobs are relying on /etc/grid-security
 # As each WN has its own /etc/grid-security, we don't need to copy the certs
 - name: Set X509_CERT_DIR for jobs
-  command: arcctl rte params-set ENV/JOB X509_CERT_DIR /etc/grid-security/certificates
+  command: arcctl rte params-set ENV/PROXY X509_CERT_DIR /etc/grid-security/certificates
 - name: Set COPY_CACERT_DIR for jobs
-  command: arcctl rte params-set ENV/JOB COPY_CACERT_DIR No
+  command: arcctl rte params-set ENV/PROXY COPY_CACERT_DIR No
 
 # Run handlers
 - meta: flush_handlers
