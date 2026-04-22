@@ -62,7 +62,7 @@ policy_on_nomap=stop
 [lrms]
 lrms = slurm
 slurm_use_sacct = yes
-benchmark=HEPSPEC:13.46
+benchmark=HEPscore23 14.64
 
 [arex]
 sessiondir = {{ arc_frontend_sessiondir }}
@@ -131,6 +131,7 @@ allowaccess = {{ vo.name }}
 allowaccess = {{ mapping.arcgroup }}
 {% endfor %}
 advertisedvo = {{ vo.name }}
+benchmark=HEPscore23 14.64
 
 {% endfor %}
 
