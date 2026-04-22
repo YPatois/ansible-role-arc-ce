@@ -17,11 +17,10 @@ voms = {{ vo }} * * *
 
 {% endfor %}
 
-
 # Authgroups for roles
 {% for vo in gridsite_supported_vos_data_list %}
 {% for mapping in vo.roles %}
-[authgroup: {{ mapping.group }}]
+[authgroup: {{ mapping.arcgroup }}]
 {% if '=' in mapping.fqan %}
 voms = {{ vo.name }} * {{ mapping.fqan.split('=')[1] }} *
 {% else %}
@@ -45,10 +44,10 @@ authgroup = {{ vo }}
 # Mapping from roles
 {% for vo in gridsite_supported_vos_data_list %}
 {% for mapping in vo.roles %}
-{% if mapping.name == 'pilot' or mapping.name == 'lcgadmin'  %}
-map_to_user = {{ mapping.pool_accounts.0.account }} {{ mapping.pool_accounts.0.account }}:{{ vo.name }}
+{% if mapping.base_uid is not defined  %}
+map_to_user = {{ mapping.arcgroup }} {{ mapping.pool_accounts.0.account }}:{{ vo.name }}
 {% else %}
-map_to_pool = {{ mapping.group }} /etc/grid-security/pools/{{ mapping.group }}
+map_to_pool = {{ mapping.arcgroup }} /etc/grid-security/pools/{{ mapping.arcgroup }}
 {% endif %}
 {% endfor %}
 {% endfor %}
@@ -81,7 +80,7 @@ httpgetpartial = yes
 {% for vo in gridsite_supported_vos_data_list %}
 allowaccess = {{ vo.name }}
 {% for mapping in vo.roles %}
-allowaccess = {{ mapping.group }}
+allowaccess = {{ mapping.arcgroup }}
 {% endfor %}
 
 {% endfor %}
@@ -129,7 +128,7 @@ advertisedvo = {{ vo }}
 comment = Dedicated queue for {{ vo.name }}
 allowaccess = {{ vo.name }}
 {% for mapping in vo.roles %}
-allowaccess = {{ mapping.group }}
+allowaccess = {{ mapping.arcgroup }}
 {% endfor %}
 advertisedvo = {{ vo.name }}
 
