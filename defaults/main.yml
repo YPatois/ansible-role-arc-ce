@@ -4,18 +4,18 @@ arc_frontend_griddir: "/var/spool/arc"
 arc_frontend_controldir: "{{ arc_frontend_griddir }}/jobstatus"
 arc_frontend_sessiondir: "{{ arc_frontend_griddir }}/sessiondir"
 arc_frontend_packages:
- - nordugrid-arc6-arex
- - nordugrid-arc6-gridftpd
- #- nordugrid-arc6-gridmap
- - nordugrid-arc6-infosys-ldap
- #- nordugrid-arc6-aris
- - nordugrid-arc6-arex
- - nordugrid-arc6-hed
- - nordugrid-arc6-plugins-python
- - nordugrid-arc6-plugins-globus
- - time # needed for the validate operation
- #- lcmaps # Maybe elsewhere?
- - mlocate # Maybe elsewhere?
+  - nordugrid-arc6-arex
+  - nordugrid-arc6-gridftpd
+  #- nordugrid-arc6-gridmap
+  - nordugrid-arc6-infosys-ldap
+  #- nordugrid-arc6-aris
+  - nordugrid-arc6-arex
+  - nordugrid-arc6-hed
+  - nordugrid-arc6-plugins-python
+  - nordugrid-arc6-plugins-globus
+  - time # needed for the validate operation
+  #- lcmaps # Maybe elsewhere?
+  - mlocate # Maybe elsewhere?
 arc_frontend_services:
   5:
     - a-rex
