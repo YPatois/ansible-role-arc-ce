@@ -24,7 +24,7 @@ voms = {{ vo }} * * *
 {% if '=' in mapping.fqan %}
 voms = {{ vo.name }} * {{ mapping.fqan.split('=')[1] }} *
 {% else %}
-voms = {{ vo.name }} {{ mapping.fqan.split('/')[2] }} * *
+voms = {{ vo.name }} {{ mapping.fqan }} * *
 {% endif %}
 {% if mapping.tokens is defined %}
 {% for token in mapping.tokens %}
